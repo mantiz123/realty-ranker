@@ -208,7 +208,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      is_my_realtor: { Args: { _realtor_id: string }; Returns: boolean }
+      [_ in never]: never
     }
     Enums: {
       generation_status: "procesando" | "listo" | "error"
