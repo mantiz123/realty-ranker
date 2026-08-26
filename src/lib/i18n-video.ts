@@ -6,8 +6,8 @@ export const esVideo: Record<string, string> = {
     "Sube tus fotos, elige tier, estilo de cámara, formato y música, y aprueba tu borrador de video.",
   "wiz.title": "Crear video",
   "wiz.subtitle":
-    "Sube entre 5 y 15 fotos y define el estilo. Verás un borrador antes de pagar.",
-  "wiz.step": "Paso {n} de 4",
+    "Sube entre 5 y 20 fotos y define el estilo. Verás un borrador antes de pagar.",
+  "wiz.step": "Paso {n} de 5",
 
   "wiz.tier": "Elige tu tier",
   "wiz.tier.basic": "Básico",
@@ -35,7 +35,17 @@ export const esVideo: Record<string, string> = {
   "wiz.mood.placeholder": "Elige un ambiente",
 
   "wiz.continue": "Generar borrador",
-  "wiz.needPhotos": "Necesitas entre 5 y 15 fotos y un email válido.",
+  "wiz.needPhotos": "Necesitas entre 5 y 20 fotos y un email válido.",
+
+  "wiz.anim.title": "Elige las fotos que animaremos con IA",
+  "wiz.anim.desc": "Selecciona hasta {max} fotos para animarlas con IA.",
+  "wiz.anim.counter": "{n} de {max} seleccionadas",
+  "wiz.anim.rest": "El resto de tus fotos se incluirán con un efecto de cámara simple.",
+  "wiz.anim.badge": "Animada con IA",
+  "wiz.anim.max": "Alcanzaste el máximo de tu tier. Deselecciona una para elegir otra.",
+  "wiz.anim.needOne": "Selecciona al menos una foto.",
+  "wiz.anim.continue": "Continuar",
+  "wiz.sum.animated": "Fotos animadas con IA",
 
   "wiz.gen.title": "Generando tu borrador...",
   "wiz.gen.desc": "Estamos montando tus fotos con el estilo elegido. Tarda menos de un minuto.",
@@ -85,8 +95,8 @@ export const enVideo: Record<string, string> = {
   "wiz.meta.desc":
     "Upload your photos, pick a tier, camera style, format and music, then approve your draft video.",
   "wiz.title": "Create video",
-  "wiz.subtitle": "Upload 5 to 15 photos and set the style. You'll see a draft before paying.",
-  "wiz.step": "Step {n} of 4",
+  "wiz.subtitle": "Upload 5 to 20 photos and set the style. You'll see a draft before paying.",
+  "wiz.step": "Step {n} of 5",
 
   "wiz.tier": "Choose your tier",
   "wiz.tier.basic": "Basic",
@@ -114,7 +124,17 @@ export const enVideo: Record<string, string> = {
   "wiz.mood.placeholder": "Pick a mood",
 
   "wiz.continue": "Generate draft",
-  "wiz.needPhotos": "You need 5 to 15 photos and a valid email.",
+  "wiz.needPhotos": "You need 5 to 20 photos and a valid email.",
+
+  "wiz.anim.title": "Choose the photos we'll animate with AI",
+  "wiz.anim.desc": "Select up to {max} photos to animate with AI.",
+  "wiz.anim.counter": "{n} of {max} selected",
+  "wiz.anim.rest": "The rest of your photos will be included with a simple camera effect.",
+  "wiz.anim.badge": "AI animated",
+  "wiz.anim.max": "You reached your tier limit. Deselect one to pick another.",
+  "wiz.anim.needOne": "Select at least one photo.",
+  "wiz.anim.continue": "Continue",
+  "wiz.sum.animated": "AI animated photos",
 
   "wiz.gen.title": "Generating your draft...",
   "wiz.gen.desc": "We're editing your photos in the chosen style. This takes under a minute.",

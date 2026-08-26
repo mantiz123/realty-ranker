@@ -39,7 +39,7 @@ export const Route = createFileRoute("/$lang/crear-video")({
   component: CrearVideoPage,
 });
 
-type Paso = "form" | "generando" | "borrador" | "resumen";
+type Paso = "form" | "animar" | "generando" | "borrador" | "resumen";
 type Tier = "basico" | "pro";
 type Camara = "cinematic" | "zoom";
 type Mood = "elegant" | "energetic" | "warm" | "minimal";
@@ -56,12 +56,27 @@ function CrearVideoPage() {
   const [youtube, setYoutube] = useState(false);
   const [mood, setMood] = useState<Mood>("elegant");
   const [cambios, setCambios] = useState(MAX_CAMBIOS);
+  const [animadas, setAnimadas] = useState<number[]>([]);
 
-  const valido = fotos.length >= 5 && fotos.length <= 15 && email.includes("@");
+  const maxAnim = tier === "pro" ? 8 : 4;
+  const valido = fotos.length >= 5 && fotos.length <= 20 && email.includes("@");
   const total = PRECIO[tier] + (youtube ? EXTRA_YT : 0);
-  const pasoNum = paso === "form" ? 1 : paso === "generando" ? 2 : paso === "borrador" ? 3 : 4;
+  const pasoNum =
+    paso === "form" ? 1 : paso === "animar" ? 2 : paso === "generando" ? 3 : paso === "borrador" ? 4 : 5;
 
-  const preview = useMemo(() => (fotos[0] ? URL.createObjectURL(fotos[0]) : null), [fotos]);
+  const urls = useMemo(() => fotos.map((f) => URL.createObjectURL(f)), [fotos]);
+  useEffect(() => () => urls.forEach((u) => URL.revokeObjectURL(u)), [urls]);
+  const preview = urls[0] ?? null;
+
+  useEffect(() => {
+    setAnimadas((prev) => prev.filter((i) => i < fotos.length).slice(0, maxAnim));
+  }, [maxAnim, fotos.length]);
+
+  function toggleAnim(i: number) {
+    setAnimadas((prev) =>
+      prev.includes(i) ? prev.filter((x) => x !== i) : prev.length >= maxAnim ? prev : [...prev, i],
+    );
+  }
 
   useEffect(() => {
     if (paso !== "generando") return;
@@ -71,7 +86,7 @@ function CrearVideoPage() {
 
   function agregar(files: FileList | null) {
     if (!files) return;
-    setFotos((prev) => [...prev, ...Array.from(files)].slice(0, 15));
+    setFotos((prev) => [...prev, ...Array.from(files)].slice(0, 20));
   }
 
   return (
@@ -88,7 +103,7 @@ function CrearVideoPage() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              setPaso("generando");
+              setPaso("animar");
             }}
             className="mt-16 space-y-16"
           >
@@ -124,7 +139,7 @@ function CrearVideoPage() {
                       className="group relative aspect-square overflow-hidden"
                     >
                       <img
-                        src={URL.createObjectURL(f)}
+                        src={urls[i]}
                         alt={t("upload.photoAlt", { n: i + 1 })}
                         loading="lazy"
                         className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -268,6 +283,78 @@ function CrearVideoPage() {
           </form>
         )}
 
+        {paso === "animar" && (
+          <div className="mt-16 animate-in fade-in duration-700">
+            <h2 className="font-display text-3xl">{t("wiz.anim.title")}</h2>
+            <p className="mt-3 max-w-xl text-muted-foreground">
+              {t("wiz.anim.desc", { max: maxAnim })}
+            </p>
+            <div className="mt-8 flex items-baseline justify-between border-b border-border pb-4">
+              <span className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+                {t("wiz.anim.counter", { n: animadas.length, max: maxAnim })}
+              </span>
+              {animadas.length >= maxAnim && (
+                <span className="text-xs text-muted-foreground">{t("wiz.anim.max")}</span>
+              )}
+            </div>
+            <div className="mt-6 grid grid-cols-3 gap-2 sm:grid-cols-4">
+              {fotos.map((f, i) => {
+                const sel = animadas.includes(i);
+                const bloqueada = !sel && animadas.length >= maxAnim;
+                return (
+                  <button
+                    key={`${f.name}-anim-${i}`}
+                    type="button"
+                    aria-pressed={sel}
+                    onClick={() => toggleAnim(i)}
+                    className={`relative aspect-square overflow-hidden transition-opacity duration-300 ${
+                      bloqueada ? "opacity-40" : "opacity-100"
+                    }`}
+                  >
+                    <img
+                      src={urls[i]}
+                      alt={t("upload.photoAlt", { n: i + 1 })}
+                      loading="lazy"
+                      className="size-full object-cover"
+                    />
+                    <span
+                      className={`pointer-events-none absolute inset-0 border-2 transition-colors duration-300 ${
+                        sel ? "border-accent-foreground bg-accent-foreground/10" : "border-transparent"
+                      }`}
+                    />
+                    {sel && (
+                      <span className="absolute left-2 top-2 flex items-center gap-1 bg-background/90 px-2 py-1 text-[10px] uppercase tracking-[0.16em]">
+                        <Check className="size-3 text-accent-foreground" />
+                        {t("wiz.anim.badge")}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-6 text-sm text-muted-foreground">{t("wiz.anim.rest")}</p>
+            <div className="mt-10 flex flex-wrap items-center gap-6 border-t border-border pt-8">
+              <Button
+                className="rounded-none px-10"
+                disabled={animadas.length === 0}
+                onClick={() => setPaso("generando")}
+              >
+                {t("wiz.anim.continue")}
+              </Button>
+              {animadas.length === 0 && (
+                <p className="text-sm text-muted-foreground">{t("wiz.anim.needOne")}</p>
+              )}
+              <Button
+                variant="ghost"
+                className="ml-auto rounded-none px-0 text-xs uppercase tracking-[0.18em] hover:bg-transparent"
+                onClick={() => setPaso("form")}
+              >
+                {t("wiz.back")}
+              </Button>
+            </div>
+          </div>
+        )}
+
         {paso === "generando" && (
           <div className="flex flex-col items-center justify-center py-32 text-center">
             <div className="relative flex size-24 items-center justify-center">
@@ -326,6 +413,10 @@ function CrearVideoPage() {
             <p className="mt-3 text-muted-foreground">{t("wiz.sum.desc")}</p>
             <dl className="mt-10 border-t border-border">
               <Fila label={t("wiz.sum.tier")} value={`${t(`wiz.tier.${tier === "basico" ? "basic" : "pro"}`)} — $${PRECIO[tier]}`} />
+              <Fila
+                label={t("wiz.sum.animated")}
+                value={t("wiz.anim.counter", { n: animadas.length, max: maxAnim })}
+              />
               <Fila label={t("wiz.sum.camera")} value={t(`wiz.camera.${camara}`)} />
               <Fila label={t("wiz.sum.mood")} value={t(`wiz.mood.${mood}`)} />
               <Fila

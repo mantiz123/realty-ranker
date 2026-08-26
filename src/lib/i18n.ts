@@ -56,7 +56,7 @@ const es: Dict = {
   "upload.subtitle":
     "Sube entre 5 y 15 fotos. Generaremos un video para la valla de tu estado.",
   "upload.photos": "Fotos de la propiedad",
-  "upload.count": "{n} de 15 seleccionadas (mínimo 5)",
+  "upload.count": "{n} de 20 (mínimo 5)",
   "upload.drop": "Arrastra o selecciona tus fotos",
   "upload.formats": "JPG o PNG",
   "upload.remove": "Quitar foto",
@@ -146,7 +146,7 @@ const en: Dict = {
   "upload.title": "Upload listing",
   "upload.subtitle": "Upload 5 to 15 photos. We'll generate a video for your state's billboard.",
   "upload.photos": "Listing photos",
-  "upload.count": "{n} of 15 selected (minimum 5)",
+  "upload.count": "{n} of 20 (minimum 5)",
   "upload.drop": "Drag or select your photos",
   "upload.formats": "JPG or PNG",
   "upload.remove": "Remove photo",
