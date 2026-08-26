@@ -48,6 +48,9 @@ export function SiteHeader({ lang }: { lang: Lang }) {
           <Link to="/$lang/subir" params={{ lang }} className={link}>
             {t("nav.upload")}
           </Link>
+          <Link to="/$lang/crear-video" params={{ lang }} className={link}>
+            {t("nav.create")}
+          </Link>
           <Link to="/$lang/panel" params={{ lang }} className={link}>
             {t("nav.panel")}
           </Link>

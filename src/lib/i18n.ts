@@ -12,6 +12,8 @@ export function detectLang(): Lang {
   return nav.some((l) => l.toLowerCase().startsWith("es")) ? "es" : "en";
 }
 
+import { esVideo, enVideo } from "./i18n-video";
+
 type Dict = Record<string, string>;
 
 const es: Dict = {
@@ -193,7 +195,7 @@ const en: Dict = {
   "panel.meta.desc": "Check your ranking position, generated videos and billboard slot.",
 };
 
-const DICTS: Record<Lang, Dict> = { es, en };
+const DICTS: Record<Lang, Dict> = { es: { ...es, ...esVideo }, en: { ...en, ...enVideo } };
 
 export function t(lang: Lang, key: string, vars?: Record<string, string | number>): string {
   let value = DICTS[lang][key] ?? DICTS.en[key] ?? key;

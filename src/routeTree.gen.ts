@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LangRouteRouteImport } from './routes/$lang/route'
 import { Route as LangIndexRouteImport } from './routes/$lang/index'
 import { Route as LangAuthenticatedRouteRouteImport } from './routes/$lang/_authenticated/route'
+import { Route as LangCrearVideoRouteImport } from './routes/$lang/crear-video'
 import { Route as LangLoginRouteImport } from './routes/$lang/login'
 import { Route as LangSubirRouteImport } from './routes/$lang/subir'
 import { Route as LangAuthenticatedPanelRouteImport } from './routes/$lang/_authenticated/panel'
@@ -35,6 +36,11 @@ const LangIndexRoute = LangIndexRouteImport.update({
 } as any)
 const LangAuthenticatedRouteRoute = LangAuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => LangRouteRoute,
+} as any)
+const LangCrearVideoRoute = LangCrearVideoRouteImport.update({
+  id: '/crear-video',
+  path: '/crear-video',
   getParentRoute: () => LangRouteRoute,
 } as any)
 const LangLoginRoute = LangLoginRouteImport.update({
@@ -61,6 +67,7 @@ const LangEstadosSlugRoute = LangEstadosSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$lang': typeof LangRouteRouteWithChildren
+  '/$lang/crear-video': typeof LangCrearVideoRoute
   '/$lang/login': typeof LangLoginRoute
   '/$lang/subir': typeof LangSubirRoute
   '/$lang/': typeof LangIndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$lang': typeof LangIndexRoute
+  '/$lang/crear-video': typeof LangCrearVideoRoute
   '/$lang/login': typeof LangLoginRoute
   '/$lang/subir': typeof LangSubirRoute
   '/$lang/panel': typeof LangAuthenticatedPanelRoute
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$lang': typeof LangRouteRouteWithChildren
   '/$lang/_authenticated': typeof LangAuthenticatedRouteRouteWithChildren
+  '/$lang/crear-video': typeof LangCrearVideoRoute
   '/$lang/login': typeof LangLoginRoute
   '/$lang/subir': typeof LangSubirRoute
   '/$lang/': typeof LangIndexRoute
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$lang'
+    | '/$lang/crear-video'
     | '/$lang/login'
     | '/$lang/subir'
     | '/$lang/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$lang'
+    | '/$lang/crear-video'
     | '/$lang/login'
     | '/$lang/subir'
     | '/$lang/panel'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$lang'
     | '/$lang/_authenticated'
+    | '/$lang/crear-video'
     | '/$lang/login'
     | '/$lang/subir'
     | '/$lang/'
@@ -149,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/$lang'
       preLoaderRoute: typeof LangAuthenticatedRouteRouteImport
+      parentRoute: typeof LangRouteRoute
+    }
+    '/$lang/crear-video': {
+      id: '/$lang/crear-video'
+      path: '/crear-video'
+      fullPath: '/$lang/crear-video'
+      preLoaderRoute: typeof LangCrearVideoRouteImport
       parentRoute: typeof LangRouteRoute
     }
     '/$lang/login': {
@@ -198,6 +217,7 @@ const LangAuthenticatedRouteRouteWithChildren =
 
 interface LangRouteRouteChildren {
   LangAuthenticatedRouteRoute: typeof LangAuthenticatedRouteRouteWithChildren
+  LangCrearVideoRoute: typeof LangCrearVideoRoute
   LangLoginRoute: typeof LangLoginRoute
   LangSubirRoute: typeof LangSubirRoute
   LangIndexRoute: typeof LangIndexRoute
@@ -206,6 +226,7 @@ interface LangRouteRouteChildren {
 
 const LangRouteRouteChildren: LangRouteRouteChildren = {
   LangAuthenticatedRouteRoute: LangAuthenticatedRouteRouteWithChildren,
+  LangCrearVideoRoute: LangCrearVideoRoute,
   LangLoginRoute: LangLoginRoute,
   LangSubirRoute: LangSubirRoute,
   LangIndexRoute: LangIndexRoute,

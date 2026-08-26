@@ -6,6 +6,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { estadoPorSlug } from "@/lib/estados";
 import { SiteHeader, SiteFooter } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { makeT, isLang, type Lang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/$lang/estados/$slug")({
@@ -68,6 +78,9 @@ function EstadoPage() {
   const { estado } = Route.useLoaderData();
   const { lang } = Route.useRouteContext();
   const t = makeT(lang);
+
+  const [pujaAbierta, setPujaAbierta] = useState(false);
+  const [oferta, setOferta] = useState("");
 
   const { data: ranking, isLoading } = useQuery({
     queryKey: ["ranking", estado.code],
@@ -209,7 +222,10 @@ function EstadoPage() {
                 <span className="text-right tabular-nums">${f.monto.toLocaleString("en-US")}</span>
                 <div className="text-right">
                   <button
-                    onClick={() => registrarVista("ranking_click", f.realtor_id)}
+                    onClick={() => {
+                      registrarVista("ranking_click", f.realtor_id);
+                      setPujaAbierta(true);
+                    }}
                     className="inline-flex items-center gap-1 text-xs uppercase tracking-[0.18em] text-accent-foreground transition-opacity duration-300 hover:opacity-60"
                   >
                     {t("state.outbid")}
@@ -220,6 +236,16 @@ function EstadoPage() {
             ))}
           </div>
         </section>
+
+        <BidDialog
+          open={pujaAbierta}
+          onOpenChange={setPujaAbierta}
+          lang={lang}
+          estadoNombre={estado.nombre}
+          maxMonto={ranking?.[0]?.monto ?? 0}
+          oferta={oferta}
+          setOferta={setOferta}
+        />
       </main>
       <SiteFooter lang={lang} />
     </div>
@@ -303,5 +329,70 @@ function Billboard({
         </Button>
       </div>
     </div>
+  );
+}
+
+function BidDialog({
+  open,
+  onOpenChange,
+  lang,
+  estadoNombre,
+  maxMonto,
+  oferta,
+  setOferta,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  lang: Lang;
+  estadoNombre: string;
+  maxMonto: number;
+  oferta: string;
+  setOferta: (v: string) => void;
+}) {
+  const t = makeT(lang);
+  const minimo = maxMonto + 1;
+  const valido = Number(oferta) >= minimo;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="rounded-none border-border sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="font-display text-3xl font-normal tracking-tight">
+            {t("bid.title")}
+          </DialogTitle>
+          <DialogDescription>{t("bid.desc", { estado: estadoNombre })}</DialogDescription>
+        </DialogHeader>
+
+        <div className="border-y border-border py-6">
+          <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+            {t("bid.current")}
+          </p>
+          <p className="mt-2 font-display text-5xl">${maxMonto.toLocaleString("en-US")}</p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="oferta" className="text-[11px] uppercase tracking-[0.2em]">
+            {t("bid.your")}
+          </Label>
+          <Input
+            id="oferta"
+            type="number"
+            min={minimo}
+            value={oferta}
+            onChange={(e) => setOferta(e.target.value)}
+            placeholder={String(minimo)}
+            className="rounded-none border-0 border-b border-border bg-transparent px-0 shadow-none focus-visible:border-accent-foreground focus-visible:ring-0"
+          />
+          <p className="text-xs text-muted-foreground">{t("bid.min", { n: maxMonto })}</p>
+        </div>
+
+        <DialogFooter className="mt-4 flex-col items-stretch gap-3 sm:flex-col">
+          <Button className="rounded-none" disabled={!valido}>
+            {t("bid.pay")}
+          </Button>
+          <p className="text-center text-xs text-muted-foreground">{t("bid.note")}</p>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

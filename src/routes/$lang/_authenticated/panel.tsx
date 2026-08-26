@@ -1,6 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Video } from "lucide-react";
+import { ArrowUpRight, Download, Loader2, Video } from "lucide-react";
+
 import { supabase } from "@/integrations/supabase/client";
 import { estadoPorCode } from "@/lib/estados";
 import { SiteHeader, SiteFooter } from "@/components/SiteHeader";
@@ -153,25 +154,62 @@ function PanelPage() {
               {data.videos.length === 0 ? (
                 <p className="py-16 text-center text-muted-foreground">{t("panel.noVideos")}</p>
               ) : (
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {data.videos.map((v) => (
-                    <div key={v.id}>
-                      <div className="flex aspect-video items-center justify-center bg-secondary">
-                        {v.video_url ? (
-                          <video src={v.video_url} className="size-full object-cover" controls />
-                        ) : (
-                          <Video className="size-7 text-muted-foreground" />
+                <div className="grid gap-10 sm:grid-cols-2">
+                  {data.videos.map((v) => {
+                    const listo = v.estado_generacion === "listo" || !!v.video_url;
+                    const est = estadoPorCode(data.realtor!.estado);
+                    return (
+                      <div key={v.id}>
+                        <div className="flex aspect-video items-center justify-center overflow-hidden bg-secondary">
+                          {v.video_url ? (
+                            <video src={v.video_url} className="size-full object-cover" controls />
+                          ) : (
+                            <Video className="size-7 text-muted-foreground" />
+                          )}
+                        </div>
+                        <div className="mt-3 flex items-center justify-between text-xs uppercase tracking-[0.18em]">
+                          <span className={listo ? "text-accent-foreground" : "text-muted-foreground"}>
+                            {listo ? t("panel.video.ready") : t("panel.video.processing")}
+                          </span>
+                          <span className="text-muted-foreground">{v.tier}</span>
+                        </div>
+                        {listo && (
+                          <>
+                            <a
+                              href={v.video_url ?? "#"}
+                              download
+                              className="mt-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-accent-foreground transition-opacity duration-300 hover:opacity-60"
+                            >
+                              <Download className="size-3.5" />
+                              {t("panel.video.download")}
+                            </a>
+                            {est && (
+                              <div className="mt-6 border-t border-border pt-6">
+                                <p className="font-display text-xl leading-snug">
+                                  {t("panel.video.upsellTitle", { estado: est.nombre })}
+                                </p>
+                                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                                  {t("panel.video.upsellDesc")}
+                                </p>
+                                <Link
+                                  to="/$lang/estados/$slug"
+                                  params={{ lang, slug: est.slug }}
+                                  className="mt-4 inline-flex items-center gap-1 text-xs uppercase tracking-[0.18em] text-accent-foreground transition-opacity duration-300 hover:opacity-60"
+                                >
+                                  {t("panel.video.upsellCta", { estado: est.nombre })}
+                                  <ArrowUpRight className="size-3.5" />
+                                </Link>
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
-                      <div className="mt-3 flex items-center justify-between text-xs uppercase tracking-[0.18em]">
-                        <span className="text-accent-foreground">{v.estado_generacion}</span>
-                        <span className="text-muted-foreground">{v.tier}</span>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </TabsContent>
+
 
             <TabsContent value="valla" className="mt-10">
               {data.slots.length === 0 ? (
