@@ -11,15 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LangRouteRouteImport } from './routes/$lang/route'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as SubirRouteImport } from './routes/subir'
 import { Route as LangIndexRouteImport } from './routes/$lang/index'
 import { Route as LangAuthenticatedRouteRouteImport } from './routes/$lang/_authenticated/route'
 import { Route as LangLoginRouteImport } from './routes/$lang/login'
 import { Route as LangSubirRouteImport } from './routes/$lang/subir'
-import { Route as AuthenticatedPanelRouteImport } from './routes/_authenticated/panel'
-import { Route as EstadosSlugRouteImport } from './routes/estados.$slug'
 import { Route as LangAuthenticatedPanelRouteImport } from './routes/$lang/_authenticated/panel'
 import { Route as LangEstadosSlugRouteImport } from './routes/$lang/estados.$slug'
 
@@ -31,20 +26,6 @@ const IndexRoute = IndexRouteImport.update({
 const LangRouteRoute = LangRouteRouteImport.update({
   id: '/$lang',
   path: '/$lang',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SubirRoute = SubirRouteImport.update({
-  id: '/subir',
-  path: '/subir',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LangIndexRoute = LangIndexRouteImport.update({
@@ -66,16 +47,6 @@ const LangSubirRoute = LangSubirRouteImport.update({
   path: '/subir',
   getParentRoute: () => LangRouteRoute,
 } as any)
-const AuthenticatedPanelRoute = AuthenticatedPanelRouteImport.update({
-  id: '/panel',
-  path: '/panel',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const EstadosSlugRoute = EstadosSlugRouteImport.update({
-  id: '/estados/$slug',
-  path: '/estados/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LangAuthenticatedPanelRoute = LangAuthenticatedPanelRouteImport.update({
   id: '/panel',
   path: '/panel',
@@ -90,25 +61,17 @@ const LangEstadosSlugRoute = LangEstadosSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$lang': typeof LangRouteRouteWithChildren
-  '/login': typeof LoginRoute
-  '/subir': typeof SubirRoute
   '/$lang/login': typeof LangLoginRoute
   '/$lang/subir': typeof LangSubirRoute
-  '/panel': typeof AuthenticatedPanelRoute
-  '/estados/$slug': typeof EstadosSlugRoute
   '/$lang/': typeof LangIndexRoute
   '/$lang/panel': typeof LangAuthenticatedPanelRoute
   '/$lang/estados/$slug': typeof LangEstadosSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/subir': typeof SubirRoute
   '/$lang': typeof LangIndexRoute
   '/$lang/login': typeof LangLoginRoute
   '/$lang/subir': typeof LangSubirRoute
-  '/panel': typeof AuthenticatedPanelRoute
-  '/estados/$slug': typeof EstadosSlugRoute
   '/$lang/panel': typeof LangAuthenticatedPanelRoute
   '/$lang/estados/$slug': typeof LangEstadosSlugRoute
 }
@@ -116,14 +79,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$lang': typeof LangRouteRouteWithChildren
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/login': typeof LoginRoute
-  '/subir': typeof SubirRoute
   '/$lang/_authenticated': typeof LangAuthenticatedRouteRouteWithChildren
   '/$lang/login': typeof LangLoginRoute
   '/$lang/subir': typeof LangSubirRoute
-  '/_authenticated/panel': typeof AuthenticatedPanelRoute
-  '/estados/$slug': typeof EstadosSlugRoute
   '/$lang/': typeof LangIndexRoute
   '/$lang/_authenticated/panel': typeof LangAuthenticatedPanelRoute
   '/$lang/estados/$slug': typeof LangEstadosSlugRoute
@@ -133,39 +91,26 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$lang'
-    | '/login'
-    | '/subir'
     | '/$lang/login'
     | '/$lang/subir'
-    | '/panel'
-    | '/estados/$slug'
     | '/$lang/'
     | '/$lang/panel'
     | '/$lang/estados/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/login'
-    | '/subir'
     | '/$lang'
     | '/$lang/login'
     | '/$lang/subir'
-    | '/panel'
-    | '/estados/$slug'
     | '/$lang/panel'
     | '/$lang/estados/$slug'
   id:
     | '__root__'
     | '/'
     | '/$lang'
-    | '/_authenticated'
-    | '/login'
-    | '/subir'
     | '/$lang/_authenticated'
     | '/$lang/login'
     | '/$lang/subir'
-    | '/_authenticated/panel'
-    | '/estados/$slug'
     | '/$lang/'
     | '/$lang/_authenticated/panel'
     | '/$lang/estados/$slug'
@@ -174,10 +119,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LangRouteRoute: typeof LangRouteRouteWithChildren
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  LoginRoute: typeof LoginRoute
-  SubirRoute: typeof SubirRoute
-  EstadosSlugRoute: typeof EstadosSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -194,27 +135,6 @@ declare module '@tanstack/react-router' {
       path: '/$lang'
       fullPath: '/$lang'
       preLoaderRoute: typeof LangRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/subir': {
-      id: '/subir'
-      path: '/subir'
-      fullPath: '/subir'
-      preLoaderRoute: typeof SubirRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$lang/': {
@@ -244,20 +164,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/$lang/subir'
       preLoaderRoute: typeof LangSubirRouteImport
       parentRoute: typeof LangRouteRoute
-    }
-    '/_authenticated/panel': {
-      id: '/_authenticated/panel'
-      path: '/panel'
-      fullPath: '/panel'
-      preLoaderRoute: typeof AuthenticatedPanelRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/estados/$slug': {
-      id: '/estados/$slug'
-      path: '/estados/$slug'
-      fullPath: '/estados/$slug'
-      preLoaderRoute: typeof EstadosSlugRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/$lang/_authenticated/panel': {
       id: '/$lang/_authenticated/panel'
@@ -310,24 +216,9 @@ const LangRouteRouteWithChildren = LangRouteRoute._addFileChildren(
   LangRouteRouteChildren,
 )
 
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedPanelRoute: typeof AuthenticatedPanelRoute
-}
-
-const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedPanelRoute: AuthenticatedPanelRoute,
-}
-
-const AuthenticatedRouteRouteWithChildren =
-  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LangRouteRoute: LangRouteRouteWithChildren,
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  LoginRoute: LoginRoute,
-  SubirRoute: SubirRoute,
-  EstadosSlugRoute: EstadosSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
