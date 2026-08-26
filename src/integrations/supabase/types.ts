@@ -14,16 +14,206 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bids: {
+        Row: {
+          creado_en: string
+          estado: string
+          id: string
+          monto: number
+          realtor_id: string
+        }
+        Insert: {
+          creado_en?: string
+          estado: string
+          id?: string
+          monto?: number
+          realtor_id: string
+        }
+        Update: {
+          creado_en?: string
+          estado?: string
+          id?: string
+          monto?: number
+          realtor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bids_realtor_id_fkey"
+            columns: ["realtor_id"]
+            isOneToOne: false
+            referencedRelation: "realtors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      billboard_slots: {
+        Row: {
+          clics: number
+          creado_en: string
+          estado: string
+          fecha_fin: string | null
+          fecha_inicio: string
+          id: string
+          realtor_id: string
+          video_id: string | null
+        }
+        Insert: {
+          clics?: number
+          creado_en?: string
+          estado: string
+          fecha_fin?: string | null
+          fecha_inicio?: string
+          id?: string
+          realtor_id: string
+          video_id?: string | null
+        }
+        Update: {
+          clics?: number
+          creado_en?: string
+          estado?: string
+          fecha_fin?: string | null
+          fecha_inicio?: string
+          id?: string
+          realtor_id?: string
+          video_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "billboard_slots_realtor_id_fkey"
+            columns: ["realtor_id"]
+            isOneToOne: false
+            referencedRelation: "realtors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "billboard_slots_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "videos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      page_views: {
+        Row: {
+          creado_en: string
+          estado: string
+          id: string
+          realtor_id: string | null
+          tipo: Database["public"]["Enums"]["view_type"]
+        }
+        Insert: {
+          creado_en?: string
+          estado: string
+          id?: string
+          realtor_id?: string | null
+          tipo: Database["public"]["Enums"]["view_type"]
+        }
+        Update: {
+          creado_en?: string
+          estado?: string
+          id?: string
+          realtor_id?: string | null
+          tipo?: Database["public"]["Enums"]["view_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_views_realtor_id_fkey"
+            columns: ["realtor_id"]
+            isOneToOne: false
+            referencedRelation: "realtors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      realtors: {
+        Row: {
+          creado_en: string
+          email: string
+          estado: string
+          foto_url: string | null
+          id: string
+          inmobiliaria: string | null
+          licencia_numero: string | null
+          nombre: string
+          telefono: string | null
+          verificado: boolean
+        }
+        Insert: {
+          creado_en?: string
+          email: string
+          estado: string
+          foto_url?: string | null
+          id?: string
+          inmobiliaria?: string | null
+          licencia_numero?: string | null
+          nombre: string
+          telefono?: string | null
+          verificado?: boolean
+        }
+        Update: {
+          creado_en?: string
+          email?: string
+          estado?: string
+          foto_url?: string | null
+          id?: string
+          inmobiliaria?: string | null
+          licencia_numero?: string | null
+          nombre?: string
+          telefono?: string | null
+          verificado?: boolean
+        }
+        Relationships: []
+      }
+      videos: {
+        Row: {
+          creado_en: string
+          estado_generacion: Database["public"]["Enums"]["generation_status"]
+          fotos_urls: string[]
+          id: string
+          realtor_id: string | null
+          tier: Database["public"]["Enums"]["video_tier"]
+          video_url: string | null
+        }
+        Insert: {
+          creado_en?: string
+          estado_generacion?: Database["public"]["Enums"]["generation_status"]
+          fotos_urls?: string[]
+          id?: string
+          realtor_id?: string | null
+          tier?: Database["public"]["Enums"]["video_tier"]
+          video_url?: string | null
+        }
+        Update: {
+          creado_en?: string
+          estado_generacion?: Database["public"]["Enums"]["generation_status"]
+          fotos_urls?: string[]
+          id?: string
+          realtor_id?: string | null
+          tier?: Database["public"]["Enums"]["video_tier"]
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "videos_realtor_id_fkey"
+            columns: ["realtor_id"]
+            isOneToOne: false
+            referencedRelation: "realtors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_my_realtor: { Args: { _realtor_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      generation_status: "procesando" | "listo" | "error"
+      video_tier: "basico" | "pro"
+      view_type: "ranking_click" | "billboard_view"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +340,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      generation_status: ["procesando", "listo", "error"],
+      video_tier: ["basico", "pro"],
+      view_type: ["ranking_click", "billboard_view"],
+    },
   },
 } as const
