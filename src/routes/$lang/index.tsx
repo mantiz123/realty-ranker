@@ -74,7 +74,7 @@ function Home() {
           <h2 className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
             {t("home.states")}
           </h2>
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid grid-cols-1 gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
             {lista.map((e) => {
               const n = activos?.[e.code] ?? 0;
               return (
