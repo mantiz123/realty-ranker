@@ -18,6 +18,7 @@ import { Route as LangLoginRouteImport } from './routes/$lang/login'
 import { Route as LangSubirRouteImport } from './routes/$lang/subir'
 import { Route as LangAuthenticatedPanelRouteImport } from './routes/$lang/_authenticated/panel'
 import { Route as LangEstadosSlugRouteImport } from './routes/$lang/estados.$slug'
+import { Route as ApiPublicVideoJobsRouteImport } from './routes/api/public/video-jobs'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -63,6 +64,11 @@ const LangEstadosSlugRoute = LangEstadosSlugRouteImport.update({
   path: '/estados/$slug',
   getParentRoute: () => LangRouteRoute,
 } as any)
+const ApiPublicVideoJobsRoute = ApiPublicVideoJobsRouteImport.update({
+  id: '/api/public/video-jobs',
+  path: '/api/public/video-jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/$lang/': typeof LangIndexRoute
   '/$lang/panel': typeof LangAuthenticatedPanelRoute
   '/$lang/estados/$slug': typeof LangEstadosSlugRoute
+  '/api/public/video-jobs': typeof ApiPublicVideoJobsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/$lang/subir': typeof LangSubirRoute
   '/$lang/panel': typeof LangAuthenticatedPanelRoute
   '/$lang/estados/$slug': typeof LangEstadosSlugRoute
+  '/api/public/video-jobs': typeof ApiPublicVideoJobsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/$lang/': typeof LangIndexRoute
   '/$lang/_authenticated/panel': typeof LangAuthenticatedPanelRoute
   '/$lang/estados/$slug': typeof LangEstadosSlugRoute
+  '/api/public/video-jobs': typeof ApiPublicVideoJobsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/$lang/'
     | '/$lang/panel'
     | '/$lang/estados/$slug'
+    | '/api/public/video-jobs'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/$lang/subir'
     | '/$lang/panel'
     | '/$lang/estados/$slug'
+    | '/api/public/video-jobs'
   id:
     | '__root__'
     | '/'
@@ -126,11 +137,13 @@ export interface FileRouteTypes {
     | '/$lang/'
     | '/$lang/_authenticated/panel'
     | '/$lang/estados/$slug'
+    | '/api/public/video-jobs'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LangRouteRoute: typeof LangRouteRouteWithChildren
+  ApiPublicVideoJobsRoute: typeof ApiPublicVideoJobsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangEstadosSlugRouteImport
       parentRoute: typeof LangRouteRoute
     }
+    '/api/public/video-jobs': {
+      id: '/api/public/video-jobs'
+      path: '/api/public/video-jobs'
+      fullPath: '/api/public/video-jobs'
+      preLoaderRoute: typeof ApiPublicVideoJobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -240,6 +260,7 @@ const LangRouteRouteWithChildren = LangRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LangRouteRoute: LangRouteRouteWithChildren,
+  ApiPublicVideoJobsRoute: ApiPublicVideoJobsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
