@@ -68,16 +68,23 @@ export function SiteHeader({ lang }: { lang: Lang }) {
           <Link to="/$lang/crear-video" params={{ lang }} className={link}>
             {t("nav.create")}
           </Link>
-          <Link to="/$lang/panel" params={{ lang }} className={link}>
-            {t("nav.panel")}
-          </Link>
-          <Link
-            to="/$lang/login"
-            params={{ lang }}
-            className="text-sm text-accent-foreground transition-colors duration-300 hover:text-foreground"
-          >
-            {t("nav.login")}
-          </Link>
+          {signedIn === null ? null : signedIn ? (
+            <Link
+              to="/$lang/panel"
+              params={{ lang }}
+              className="text-sm text-accent-foreground transition-colors duration-300 hover:text-foreground"
+            >
+              {t("nav.panel")}
+            </Link>
+          ) : (
+            <Link
+              to="/$lang/login"
+              params={{ lang }}
+              className="text-sm text-accent-foreground transition-colors duration-300 hover:text-foreground"
+            >
+              {t("nav.login")}
+            </Link>
+          )}
           <LangSwitcher lang={lang} />
         </nav>
       </div>
