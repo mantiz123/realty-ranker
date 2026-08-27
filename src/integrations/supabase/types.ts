@@ -167,29 +167,50 @@ export type Database = {
       }
       videos: {
         Row: {
+          ambiente_musical: string | null
           creado_en: string
+          duracion_segundos: number
           estado_generacion: Database["public"]["Enums"]["generation_status"]
+          estilo_camara: string | null
           fotos_urls: string[]
           id: string
+          incluye_horizontal: boolean
+          monto_centavos: number | null
           realtor_id: string | null
+          sin_marca_agua: boolean
+          stripe_session_id: string | null
           tier: Database["public"]["Enums"]["video_tier"]
           video_url: string | null
         }
         Insert: {
+          ambiente_musical?: string | null
           creado_en?: string
+          duracion_segundos?: number
           estado_generacion?: Database["public"]["Enums"]["generation_status"]
+          estilo_camara?: string | null
           fotos_urls?: string[]
           id?: string
+          incluye_horizontal?: boolean
+          monto_centavos?: number | null
           realtor_id?: string | null
+          sin_marca_agua?: boolean
+          stripe_session_id?: string | null
           tier?: Database["public"]["Enums"]["video_tier"]
           video_url?: string | null
         }
         Update: {
+          ambiente_musical?: string | null
           creado_en?: string
+          duracion_segundos?: number
           estado_generacion?: Database["public"]["Enums"]["generation_status"]
+          estilo_camara?: string | null
           fotos_urls?: string[]
           id?: string
+          incluye_horizontal?: boolean
+          monto_centavos?: number | null
           realtor_id?: string | null
+          sin_marca_agua?: boolean
+          stripe_session_id?: string | null
           tier?: Database["public"]["Enums"]["video_tier"]
           video_url?: string | null
         }
@@ -211,7 +232,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      generation_status: "procesando" | "listo" | "error"
+      generation_status: "procesando" | "listo" | "error" | "pendiente_pago"
       video_tier: "basico" | "pro"
       view_type: "ranking_click" | "billboard_view"
     }
@@ -341,7 +362,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      generation_status: ["procesando", "listo", "error"],
+      generation_status: ["procesando", "listo", "error", "pendiente_pago"],
       video_tier: ["basico", "pro"],
       view_type: ["ranking_click", "billboard_view"],
     },
