@@ -57,7 +57,11 @@ export const Route = createFileRoute('/api/public/video-jobs')({
           .limit(20)
 
         if (error) return new Response(error.message, { status: 500 })
-        return Response.json({ jobs: data ?? [] })
+        const jobs = (data ?? []).map((job) => ({
+          ...job,
+          fotos_urls: resolvePhotoUrls(job.fotos_urls, request.url),
+        }))
+        return Response.json({ jobs })
       },
 
       // Worker reports a finished (or failed) job
