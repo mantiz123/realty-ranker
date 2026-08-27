@@ -166,6 +166,15 @@ function PanelPage() {
                 <div className="grid gap-10 sm:grid-cols-2">
                   {data.videos.map((v) => {
                     const listo = v.estado_generacion === "listo" || !!v.video_url;
+                    const error = !listo && v.estado_generacion === "error";
+                    const pendiente = !listo && v.estado_generacion === "pendiente_pago";
+                    const etiqueta = listo
+                      ? t("panel.video.ready")
+                      : error
+                        ? t("panel.video.error")
+                        : pendiente
+                          ? t("panel.video.pendingPayment")
+                          : t("panel.video.processing");
                     const est = estadoPorCode(data.realtor!.estado);
                     return (
                       <div key={v.id}>
@@ -177,16 +186,37 @@ function PanelPage() {
                           )}
                         </div>
                         <div className="mt-3 flex items-center justify-between text-xs uppercase tracking-[0.18em]">
-                          <span className={listo ? "text-accent-foreground" : "text-muted-foreground"}>
-                            {listo
-                              ? t("panel.video.ready")
-                              : v.estado_generacion === "pendiente_pago"
-                                ? t("panel.video.pendingPayment")
-                                : t("panel.video.processing")}
+                          <span
+                            className={
+                              listo
+                                ? "text-accent-foreground"
+                                : error
+                                  ? "text-destructive"
+                                  : "text-muted-foreground"
+                            }
+                          >
+                            {!listo && !error && (
+                              <Loader2 className="mr-2 inline size-3 animate-spin" />
+                            )}
+                            {etiqueta}
                           </span>
 
                           <span className="text-muted-foreground">{v.tier}</span>
                         </div>
+                        {error && (
+                          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                            {t("panel.video.errorHelp")}
+                          </p>
+                        )}
+                        {pendiente && (
+                          <Link
+                            to="/$lang/crear-video"
+                            params={{ lang }}
+                            className="mt-3 inline-block text-xs uppercase tracking-[0.18em] text-accent-foreground transition-opacity duration-300 hover:opacity-60"
+                          >
+                            {t("panel.video.payNow")}
+                          </Link>
+                        )}
                         {listo && (
                           <>
                             <a
