@@ -20,6 +20,7 @@ import { Route as LangAuthenticatedPanelRouteImport } from './routes/$lang/_auth
 import { Route as LangEstadosSlugRouteImport } from './routes/$lang/estados.$slug'
 import { Route as ApiPublicVideoJobsRouteImport } from './routes/api/public/video-jobs'
 import { Route as ApiPublicVideoUploadRouteImport } from './routes/api/public/video-upload'
+import { Route as ApiPublicPhotoFileSplatRouteImport } from './routes/api/public/photo-file.$'
 import { Route as ApiPublicVideoFileSplatRouteImport } from './routes/api/public/video-file.$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -76,6 +77,11 @@ const ApiPublicVideoUploadRoute = ApiPublicVideoUploadRouteImport.update({
   path: '/api/public/video-upload',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPhotoFileSplatRoute = ApiPublicPhotoFileSplatRouteImport.update({
+  id: '/api/public/photo-file/$',
+  path: '/api/public/photo-file/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicVideoFileSplatRoute = ApiPublicVideoFileSplatRouteImport.update({
   id: '/api/public/video-file/$',
   path: '/api/public/video-file/$',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/$lang/estados/$slug': typeof LangEstadosSlugRoute
   '/api/public/video-jobs': typeof ApiPublicVideoJobsRoute
   '/api/public/video-upload': typeof ApiPublicVideoUploadRoute
+  '/api/public/photo-file/$': typeof ApiPublicPhotoFileSplatRoute
   '/api/public/video-file/$': typeof ApiPublicVideoFileSplatRoute
 }
 export interface FileRoutesByTo {
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/$lang/estados/$slug': typeof LangEstadosSlugRoute
   '/api/public/video-jobs': typeof ApiPublicVideoJobsRoute
   '/api/public/video-upload': typeof ApiPublicVideoUploadRoute
+  '/api/public/photo-file/$': typeof ApiPublicPhotoFileSplatRoute
   '/api/public/video-file/$': typeof ApiPublicVideoFileSplatRoute
 }
 export interface FileRoutesById {
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/$lang/estados/$slug': typeof LangEstadosSlugRoute
   '/api/public/video-jobs': typeof ApiPublicVideoJobsRoute
   '/api/public/video-upload': typeof ApiPublicVideoUploadRoute
+  '/api/public/photo-file/$': typeof ApiPublicPhotoFileSplatRoute
   '/api/public/video-file/$': typeof ApiPublicVideoFileSplatRoute
 }
 export interface FileRouteTypes {
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/$lang/estados/$slug'
     | '/api/public/video-jobs'
     | '/api/public/video-upload'
+    | '/api/public/photo-file/$'
     | '/api/public/video-file/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/$lang/estados/$slug'
     | '/api/public/video-jobs'
     | '/api/public/video-upload'
+    | '/api/public/photo-file/$'
     | '/api/public/video-file/$'
   id:
     | '__root__'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/$lang/estados/$slug'
     | '/api/public/video-jobs'
     | '/api/public/video-upload'
+    | '/api/public/photo-file/$'
     | '/api/public/video-file/$'
   fileRoutesById: FileRoutesById
 }
@@ -169,6 +181,7 @@ export interface RootRouteChildren {
   LangRouteRoute: typeof LangRouteRouteWithChildren
   ApiPublicVideoJobsRoute: typeof ApiPublicVideoJobsRoute
   ApiPublicVideoUploadRoute: typeof ApiPublicVideoUploadRoute
+  ApiPublicPhotoFileSplatRoute: typeof ApiPublicPhotoFileSplatRoute
   ApiPublicVideoFileSplatRoute: typeof ApiPublicVideoFileSplatRoute
 }
 
@@ -251,6 +264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicVideoUploadRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/photo-file/$': {
+      id: '/api/public/photo-file/$'
+      path: '/api/public/photo-file/$'
+      fullPath: '/api/public/photo-file/$'
+      preLoaderRoute: typeof ApiPublicPhotoFileSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/video-file/$': {
       id: '/api/public/video-file/$'
       path: '/api/public/video-file/$'
@@ -302,6 +322,7 @@ const rootRouteChildren: RootRouteChildren = {
   LangRouteRoute: LangRouteRouteWithChildren,
   ApiPublicVideoJobsRoute: ApiPublicVideoJobsRoute,
   ApiPublicVideoUploadRoute: ApiPublicVideoUploadRoute,
+  ApiPublicPhotoFileSplatRoute: ApiPublicPhotoFileSplatRoute,
   ApiPublicVideoFileSplatRoute: ApiPublicVideoFileSplatRoute,
 }
 export const routeTree = rootRouteImport

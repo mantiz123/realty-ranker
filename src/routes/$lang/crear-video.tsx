@@ -84,10 +84,33 @@ function CrearVideoPage() {
     return () => window.clearTimeout(id);
   }, [paso]);
 
+  async function enviarTrabajo() {
+    setError(null);
+    setEnviando(true);
+    setPaso("generando");
+    try {
+      const fd = new FormData();
+      fd.set("email", email);
+      fd.set("tier", tier);
+      fd.set("origin", window.location.origin);
+      animadas.forEach((i) => {
+        const f = fotos[i];
+        if (f) fd.append("fotos", f);
+      });
+      const res = await crearVideoJob({ data: fd });
+      setVideoId(res.videoId);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Error");
+    } finally {
+      setEnviando(false);
+    }
+  }
+
   function agregar(files: FileList | null) {
     if (!files) return;
     setFotos((prev) => [...prev, ...Array.from(files)].slice(0, 20));
   }
+
 
   return (
     <div className="min-h-screen">
