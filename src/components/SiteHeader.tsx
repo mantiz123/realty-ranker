@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import { makeT, type Lang } from "@/lib/i18n";
 
 function LangSwitcher({ lang }: { lang: Lang }) {
@@ -29,8 +31,23 @@ function LangSwitcher({ lang }: { lang: Lang }) {
 
 export function SiteHeader({ lang }: { lang: Lang }) {
   const t = makeT(lang);
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const link =
     "text-sm text-muted-foreground transition-colors duration-300 hover:text-foreground";
+
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (active) setSignedIn(!!data.session);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      setSignedIn(!!session);
+    });
+    return () => {
+      active = false;
+      sub.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm">
@@ -51,16 +68,23 @@ export function SiteHeader({ lang }: { lang: Lang }) {
           <Link to="/$lang/crear-video" params={{ lang }} className={link}>
             {t("nav.create")}
           </Link>
-          <Link to="/$lang/panel" params={{ lang }} className={link}>
-            {t("nav.panel")}
-          </Link>
-          <Link
-            to="/$lang/login"
-            params={{ lang }}
-            className="text-sm text-accent-foreground transition-colors duration-300 hover:text-foreground"
-          >
-            {t("nav.login")}
-          </Link>
+          {signedIn === null ? null : signedIn ? (
+            <Link
+              to="/$lang/panel"
+              params={{ lang }}
+              className="text-sm text-accent-foreground transition-colors duration-300 hover:text-foreground"
+            >
+              {t("nav.panel")}
+            </Link>
+          ) : (
+            <Link
+              to="/$lang/login"
+              params={{ lang }}
+              className="text-sm text-accent-foreground transition-colors duration-300 hover:text-foreground"
+            >
+              {t("nav.login")}
+            </Link>
+          )}
           <LangSwitcher lang={lang} />
         </nav>
       </div>
