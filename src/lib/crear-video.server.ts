@@ -116,5 +116,11 @@ export async function procesarCreacionVideo(form: FormData) {
     .eq("id", video.id);
   if (updateError) throw new Error(updateError.message);
 
-  return { videoId: video.id as string, realtorId: realtorId as string, fotosUrls: urls };
+  return {
+    videoId: video.id as string,
+    realtorId: realtorId as string,
+    fotosUrls: urls,
+    montoCentavos,
+  };
+
 }
