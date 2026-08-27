@@ -169,8 +169,13 @@ function PanelPage() {
                         </div>
                         <div className="mt-3 flex items-center justify-between text-xs uppercase tracking-[0.18em]">
                           <span className={listo ? "text-accent-foreground" : "text-muted-foreground"}>
-                            {listo ? t("panel.video.ready") : t("panel.video.processing")}
+                            {listo
+                              ? t("panel.video.ready")
+                              : v.estado_generacion === "pendiente_pago"
+                                ? t("panel.video.pendingPayment")
+                                : t("panel.video.processing")}
                           </span>
+
                           <span className="text-muted-foreground">{v.tier}</span>
                         </div>
                         {listo && (

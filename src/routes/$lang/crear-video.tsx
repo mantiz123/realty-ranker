@@ -13,8 +13,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { makeT, isLang, type Lang } from "@/lib/i18n";
 import { crearVideoJob } from "@/lib/crear-video.functions";
+import { crearCheckout } from "@/lib/checkout.functions";
+import {
+  DURACION_MAX,
+  DURACION_MIN,
+  EXTRA_SIN_MARCA_USD,
+  clampDuracion,
+  precioBaseUsd,
+  precioTotalUsd,
+} from "@/lib/precio";
 
 import cinematicImg from "@/assets/style-cinematic.jpg";
 import zoomImg from "@/assets/style-zoom.jpg";
@@ -57,16 +67,25 @@ function CrearVideoPage() {
   const [camara, setCamara] = useState<Camara>("cinematic");
   const [youtube, setYoutube] = useState(false);
   const [mood, setMood] = useState<Mood>("elegant");
+  const [duracion, setDuracion] = useState(30);
+  const [pagando, setPagando] = useState(false);
   const [cambios, setCambios] = useState(MAX_CAMBIOS);
   const [animadas, setAnimadas] = useState<number[]>([]);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [, setVideoId] = useState<string | null>(null);
+  const [videoId, setVideoId] = useState<string | null>(null);
 
 
   const maxAnim = tier === "pro" ? 8 : 4;
   const valido = fotos.length >= 5 && fotos.length <= 20 && email.includes("@");
-  const total = PRECIO[tier] + (youtube ? EXTRA_YT : 0);
+  const sinMarcaAgua = tier === "pro";
+  const cfgPrecio = {
+    duracionSegundos: duracion,
+    sinMarcaAgua,
+    incluyeHorizontal: youtube,
+  };
+  const base = precioBaseUsd(duracion);
+  const total = precioTotalUsd(cfgPrecio);
   const pasoNum =
     paso === "form" ? 1 : paso === "animar" ? 2 : paso === "generando" ? 3 : paso === "borrador" ? 4 : 5;
 
@@ -98,6 +117,11 @@ function CrearVideoPage() {
       const fd = new FormData();
       fd.set("email", email);
       fd.set("tier", tier);
+      fd.set("duracionSegundos", String(clampDuracion(duracion)));
+      fd.set("sinMarcaAgua", String(sinMarcaAgua));
+      fd.set("incluyeHorizontal", String(youtube));
+      fd.set("estiloCamara", camara);
+      fd.set("ambienteMusical", mood);
       fd.set("origin", window.location.origin);
       animadas.forEach((i) => {
         const f = fotos[i];
@@ -109,6 +133,24 @@ function CrearVideoPage() {
       setError(e instanceof Error ? e.message : "Error");
     } finally {
       setEnviando(false);
+    }
+  }
+
+  async function pagar() {
+    if (!videoId) {
+      setError(t("wiz.pay.noOrder"));
+      return;
+    }
+    setError(null);
+    setPagando(true);
+    try {
+      const res = await crearCheckout({
+        data: { videoId, origin: window.location.origin, lang },
+      });
+      window.location.href = res.url;
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Error");
+      setPagando(false);
     }
   }
 
@@ -240,6 +282,29 @@ function CrearVideoPage() {
                     <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
                   </Opcion>
                 ))}
+              </div>
+            </section>
+
+            {/* Duración */}
+            <section>
+              <h2 className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+                {t("wiz.duration")}
+              </h2>
+              <div className="mt-6 max-w-sm">
+                <div className="flex items-baseline justify-between">
+                  <p className="font-display text-3xl">{duracion}s</p>
+                  <p className="font-display text-2xl">${base}</p>
+                </div>
+                <Slider
+                  className="mt-5"
+                  min={DURACION_MIN}
+                  max={DURACION_MAX}
+                  step={1}
+                  value={[duracion]}
+                  onValueChange={(v) => setDuracion(clampDuracion(v[0] ?? 30))}
+                  aria-label={t("wiz.duration")}
+                />
+                <p className="mt-3 text-sm text-muted-foreground">{t("wiz.duration.desc")}</p>
               </div>
             </section>
 
@@ -448,6 +513,10 @@ function CrearVideoPage() {
                 label={t("wiz.sum.animated")}
                 value={t("wiz.anim.counter", { n: animadas.length, max: maxAnim })}
               />
+              <Fila label={t("wiz.sum.duration")} value={`${duracion}s — $${base}`} />
+              {sinMarcaAgua && (
+                <Fila label={t("wiz.sum.noWatermark")} value={`$${EXTRA_SIN_MARCA_USD}`} />
+              )}
               <Fila label={t("wiz.sum.camera")} value={t(`wiz.camera.${camara}`)} />
               <Fila label={t("wiz.sum.mood")} value={t(`wiz.mood.${mood}`)} />
               <Fila
@@ -463,7 +532,10 @@ function CrearVideoPage() {
               </div>
             </dl>
             <div className="mt-10 flex flex-wrap items-center gap-6">
-              <Button className="rounded-none px-10">{t("wiz.sum.pay")}</Button>
+              <Button className="rounded-none px-10" onClick={pagar} disabled={pagando}>
+                {pagando && <Loader2 className="mr-2 size-4 animate-spin" />}
+                {t("wiz.sum.pay")}
+              </Button>
               <Button
                 variant="ghost"
                 className="rounded-none px-0 text-xs uppercase tracking-[0.18em] hover:bg-transparent"
@@ -472,6 +544,7 @@ function CrearVideoPage() {
                 {t("wiz.back")}
               </Button>
             </div>
+            {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
             <p className="mt-4 text-sm text-muted-foreground">{t("wiz.sum.note")}</p>
           </div>
         )}
