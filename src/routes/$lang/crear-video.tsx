@@ -14,6 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { makeT, isLang, type Lang } from "@/lib/i18n";
+import { crearVideoJob } from "@/lib/crear-video.functions";
+
 import cinematicImg from "@/assets/style-cinematic.jpg";
 import zoomImg from "@/assets/style-zoom.jpg";
 
@@ -57,6 +59,10 @@ function CrearVideoPage() {
   const [mood, setMood] = useState<Mood>("elegant");
   const [cambios, setCambios] = useState(MAX_CAMBIOS);
   const [animadas, setAnimadas] = useState<number[]>([]);
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [, setVideoId] = useState<string | null>(null);
+
 
   const maxAnim = tier === "pro" ? 8 : 4;
   const valido = fotos.length >= 5 && fotos.length <= 20 && email.includes("@");
