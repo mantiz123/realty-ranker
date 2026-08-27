@@ -8,12 +8,18 @@ const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/avif"])
 const metaSchema = z.object({
   email: z.string().email().max(200),
   tier: z.enum(["basico", "pro"]),
+  duracionSegundos: z.coerce.number().int().min(15).max(60).default(30),
+  sinMarcaAgua: z.enum(["true", "false"]).transform((v) => v === "true"),
+  incluyeHorizontal: z.enum(["true", "false"]).transform((v) => v === "true"),
+  estiloCamara: z.enum(["cinematic", "zoom"]).optional(),
+  ambienteMusical: z.enum(["elegant", "energetic", "warm", "minimal"]).optional(),
   origin: z
     .string()
     .max(200)
     .regex(/^https?:\/\/[A-Za-z0-9._:-]+$/)
     .optional(),
 });
+
 
 function extFor(type: string) {
   if (type === "image/png") return "png";

@@ -18,6 +18,7 @@ import { Route as LangLoginRouteImport } from './routes/$lang/login'
 import { Route as LangSubirRouteImport } from './routes/$lang/subir'
 import { Route as LangAuthenticatedPanelRouteImport } from './routes/$lang/_authenticated/panel'
 import { Route as LangEstadosSlugRouteImport } from './routes/$lang/estados.$slug'
+import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 import { Route as ApiPublicVideoJobsRouteImport } from './routes/api/public/video-jobs'
 import { Route as ApiPublicVideoUploadRouteImport } from './routes/api/public/video-upload'
 import { Route as ApiPublicPhotoFileSplatRouteImport } from './routes/api/public/photo-file.$'
@@ -67,6 +68,11 @@ const LangEstadosSlugRoute = LangEstadosSlugRouteImport.update({
   path: '/estados/$slug',
   getParentRoute: () => LangRouteRoute,
 } as any)
+const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
+  id: '/api/public/stripe-webhook',
+  path: '/api/public/stripe-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicVideoJobsRoute = ApiPublicVideoJobsRouteImport.update({
   id: '/api/public/video-jobs',
   path: '/api/public/video-jobs',
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/$lang/': typeof LangIndexRoute
   '/$lang/panel': typeof LangAuthenticatedPanelRoute
   '/$lang/estados/$slug': typeof LangEstadosSlugRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/video-jobs': typeof ApiPublicVideoJobsRoute
   '/api/public/video-upload': typeof ApiPublicVideoUploadRoute
   '/api/public/photo-file/$': typeof ApiPublicPhotoFileSplatRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/$lang/subir': typeof LangSubirRoute
   '/$lang/panel': typeof LangAuthenticatedPanelRoute
   '/$lang/estados/$slug': typeof LangEstadosSlugRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/video-jobs': typeof ApiPublicVideoJobsRoute
   '/api/public/video-upload': typeof ApiPublicVideoUploadRoute
   '/api/public/photo-file/$': typeof ApiPublicPhotoFileSplatRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/$lang/': typeof LangIndexRoute
   '/$lang/_authenticated/panel': typeof LangAuthenticatedPanelRoute
   '/$lang/estados/$slug': typeof LangEstadosSlugRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
   '/api/public/video-jobs': typeof ApiPublicVideoJobsRoute
   '/api/public/video-upload': typeof ApiPublicVideoUploadRoute
   '/api/public/photo-file/$': typeof ApiPublicPhotoFileSplatRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/$lang/'
     | '/$lang/panel'
     | '/$lang/estados/$slug'
+    | '/api/public/stripe-webhook'
     | '/api/public/video-jobs'
     | '/api/public/video-upload'
     | '/api/public/photo-file/$'
@@ -155,6 +165,7 @@ export interface FileRouteTypes {
     | '/$lang/subir'
     | '/$lang/panel'
     | '/$lang/estados/$slug'
+    | '/api/public/stripe-webhook'
     | '/api/public/video-jobs'
     | '/api/public/video-upload'
     | '/api/public/photo-file/$'
@@ -170,6 +181,7 @@ export interface FileRouteTypes {
     | '/$lang/'
     | '/$lang/_authenticated/panel'
     | '/$lang/estados/$slug'
+    | '/api/public/stripe-webhook'
     | '/api/public/video-jobs'
     | '/api/public/video-upload'
     | '/api/public/photo-file/$'
@@ -179,6 +191,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LangRouteRoute: typeof LangRouteRouteWithChildren
+  ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   ApiPublicVideoJobsRoute: typeof ApiPublicVideoJobsRoute
   ApiPublicVideoUploadRoute: typeof ApiPublicVideoUploadRoute
   ApiPublicPhotoFileSplatRoute: typeof ApiPublicPhotoFileSplatRoute
@@ -250,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangEstadosSlugRouteImport
       parentRoute: typeof LangRouteRoute
     }
+    '/api/public/stripe-webhook': {
+      id: '/api/public/stripe-webhook'
+      path: '/api/public/stripe-webhook'
+      fullPath: '/api/public/stripe-webhook'
+      preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/video-jobs': {
       id: '/api/public/video-jobs'
       path: '/api/public/video-jobs'
@@ -320,6 +340,7 @@ const LangRouteRouteWithChildren = LangRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LangRouteRoute: LangRouteRouteWithChildren,
+  ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   ApiPublicVideoJobsRoute: ApiPublicVideoJobsRoute,
   ApiPublicVideoUploadRoute: ApiPublicVideoUploadRoute,
   ApiPublicPhotoFileSplatRoute: ApiPublicPhotoFileSplatRoute,
