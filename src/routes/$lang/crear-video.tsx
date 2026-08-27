@@ -147,7 +147,23 @@ function CrearVideoPage() {
       const res = await crearCheckout({
         data: { videoId, origin: window.location.origin, lang },
       });
+      // Stripe Checkout no se puede mostrar dentro de un iframe (vista previa
+      // del editor): en ese caso abrimos la pasarela en una pestaña nueva.
+      const dentroDeIframe = window.top !== window.self;
+      if (dentroDeIframe) {
+        const w = window.open(res.url, "_blank", "noopener,noreferrer");
+        if (!w) {
+          try {
+            window.top!.location.href = res.url;
+          } catch {
+            window.location.href = res.url;
+          }
+        }
+        setPagando(false);
+        return;
+      }
       window.location.href = res.url;
+
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error");
       setPagando(false);
