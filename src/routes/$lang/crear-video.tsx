@@ -14,6 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { makeT, isLang, type Lang } from "@/lib/i18n";
+import { crearVideoJob } from "@/lib/crear-video.functions";
+
 import cinematicImg from "@/assets/style-cinematic.jpg";
 import zoomImg from "@/assets/style-zoom.jpg";
 
@@ -57,6 +59,10 @@ function CrearVideoPage() {
   const [mood, setMood] = useState<Mood>("elegant");
   const [cambios, setCambios] = useState(MAX_CAMBIOS);
   const [animadas, setAnimadas] = useState<number[]>([]);
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [, setVideoId] = useState<string | null>(null);
+
 
   const maxAnim = tier === "pro" ? 8 : 4;
   const valido = fotos.length >= 5 && fotos.length <= 20 && email.includes("@");
@@ -84,10 +90,33 @@ function CrearVideoPage() {
     return () => window.clearTimeout(id);
   }, [paso]);
 
+  async function enviarTrabajo() {
+    setError(null);
+    setEnviando(true);
+    setPaso("generando");
+    try {
+      const fd = new FormData();
+      fd.set("email", email);
+      fd.set("tier", tier);
+      fd.set("origin", window.location.origin);
+      animadas.forEach((i) => {
+        const f = fotos[i];
+        if (f) fd.append("fotos", f);
+      });
+      const res = await crearVideoJob({ data: fd });
+      setVideoId(res.videoId);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Error");
+    } finally {
+      setEnviando(false);
+    }
+  }
+
   function agregar(files: FileList | null) {
     if (!files) return;
     setFotos((prev) => [...prev, ...Array.from(files)].slice(0, 20));
   }
+
 
   return (
     <div className="min-h-screen">
@@ -336,14 +365,16 @@ function CrearVideoPage() {
             <div className="mt-10 flex flex-wrap items-center gap-6 border-t border-border pt-8">
               <Button
                 className="rounded-none px-10"
-                disabled={animadas.length === 0}
-                onClick={() => setPaso("generando")}
+                disabled={animadas.length === 0 || enviando}
+                onClick={() => void enviarTrabajo()}
               >
                 {t("wiz.anim.continue")}
               </Button>
               {animadas.length === 0 && (
                 <p className="text-sm text-muted-foreground">{t("wiz.anim.needOne")}</p>
               )}
+              {error && <p className="text-sm text-destructive">{error}</p>}
+
               <Button
                 variant="ghost"
                 className="ml-auto rounded-none px-0 text-xs uppercase tracking-[0.18em] hover:bg-transparent"
