@@ -32,8 +32,14 @@ export async function procesarCreacionVideo(form: FormData) {
   const meta = metaSchema.parse({
     email: String(form.get("email") ?? "").trim().toLowerCase(),
     tier: String(form.get("tier") ?? ""),
+    duracionSegundos: String(form.get("duracionSegundos") ?? "30"),
+    sinMarcaAgua: String(form.get("sinMarcaAgua") ?? "false"),
+    incluyeHorizontal: String(form.get("incluyeHorizontal") ?? "false"),
+    estiloCamara: form.get("estiloCamara") ? String(form.get("estiloCamara")) : undefined,
+    ambienteMusical: form.get("ambienteMusical") ? String(form.get("ambienteMusical")) : undefined,
     origin: form.get("origin") ? String(form.get("origin")) : undefined,
   });
+
 
   const files = form.getAll("fotos").filter((f): f is File => f instanceof File);
   const maxForTier = meta.tier === "pro" ? MAX_FILES : 4;
