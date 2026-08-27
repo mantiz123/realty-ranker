@@ -29,8 +29,23 @@ function LangSwitcher({ lang }: { lang: Lang }) {
 
 export function SiteHeader({ lang }: { lang: Lang }) {
   const t = makeT(lang);
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const link =
     "text-sm text-muted-foreground transition-colors duration-300 hover:text-foreground";
+
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (active) setSignedIn(!!data.session);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      setSignedIn(!!session);
+    });
+    return () => {
+      active = false;
+      sub.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm">
