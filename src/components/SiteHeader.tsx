@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import { makeT, type Lang } from "@/lib/i18n";
 
 function LangSwitcher({ lang }: { lang: Lang }) {
