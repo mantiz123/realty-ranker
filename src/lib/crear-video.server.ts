@@ -73,7 +73,9 @@ export async function procesarCreacionVideo(form: FormData) {
       .from(BUCKET)
       .upload(path, await file.arrayBuffer(), { contentType: file.type, upsert: true });
     if (uploadError) throw new Error(uploadError.message);
-    urls.push(`${meta.origin ?? ""}/api/public/photo-file/${path}`);
+    // Store a domain-agnostic path; the worker endpoint resolves it to the
+    // deployed app origin at read time (editor preview domains don't serve files).
+    urls.push(`/api/public/photo-file/${path}`);
   }
 
   const { error: updateError } = await supabaseAdmin
