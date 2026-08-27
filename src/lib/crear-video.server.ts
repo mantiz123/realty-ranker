@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { precioTotalCentavos } from "./precio";
+
 
 const BUCKET = "property-photos";
 const MAX_FILES = 8;
