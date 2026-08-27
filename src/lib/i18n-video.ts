@@ -79,6 +79,9 @@ export const esVideo: Record<string, string> = {
   "panel.video.processing": "Procesando",
   "panel.video.pendingPayment": "Pendiente de pago",
   "panel.video.ready": "Listo",
+  "panel.video.error": "Error de generación",
+  "panel.video.errorHelp": "Este pedido falló durante la generación. Escríbenos y lo repetimos sin costo.",
+  "panel.video.payNow": "Pagar y generar",
   "panel.video.download": "Descargar",
   "panel.video.upsellTitle": "Destaca esta propiedad en el ranking de {estado}",
   "panel.video.upsellDesc":
