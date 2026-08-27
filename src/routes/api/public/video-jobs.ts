@@ -23,6 +23,8 @@ async function authorize(request: Request): Promise<Response | null> {
   return null
 }
 
+
+
 export const Route = createFileRoute('/api/public/video-jobs')({
   server: {
     handlers: {
