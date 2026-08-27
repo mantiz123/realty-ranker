@@ -179,6 +179,9 @@ export const enVideo: Record<string, string> = {
   "panel.video.processing": "Processing",
   "panel.video.pendingPayment": "Payment pending",
   "panel.video.ready": "Ready",
+  "panel.video.error": "Generation failed",
+  "panel.video.errorHelp": "This order failed while generating. Contact us and we'll redo it at no cost.",
+  "panel.video.payNow": "Pay and generate",
   "panel.video.download": "Download",
   "panel.video.upsellTitle": "Feature this listing in the {estado} ranking",
   "panel.video.upsellDesc":
