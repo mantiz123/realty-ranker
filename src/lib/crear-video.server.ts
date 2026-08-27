@@ -71,12 +71,30 @@ export async function procesarCreacionVideo(form: FormData) {
   }
 
   // Create the video row first so photos live under a stable folder.
+  // El pedido queda a la espera del pago: el worker solo ve 'procesando'.
+  const montoCentavos = precioTotalCentavos({
+    duracionSegundos: meta.duracionSegundos,
+    sinMarcaAgua: meta.sinMarcaAgua,
+    incluyeHorizontal: meta.incluyeHorizontal,
+  });
   const { data: video, error: videoError } = await supabaseAdmin
     .from("videos")
-    .insert({ realtor_id: realtorId, tier: meta.tier, estado_generacion: "procesando", fotos_urls: [] })
+    .insert({
+      realtor_id: realtorId,
+      tier: meta.tier,
+      estado_generacion: "pendiente_pago",
+      fotos_urls: [],
+      duracion_segundos: meta.duracionSegundos,
+      sin_marca_agua: meta.sinMarcaAgua,
+      incluye_horizontal: meta.incluyeHorizontal,
+      estilo_camara: meta.estiloCamara ?? null,
+      ambiente_musical: meta.ambienteMusical ?? null,
+      monto_centavos: montoCentavos,
+    })
     .select("id")
     .single();
   if (videoError) throw new Error(videoError.message);
+
 
   const urls: string[] = [];
   for (const [i, file] of files.entries()) {
