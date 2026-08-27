@@ -67,6 +67,15 @@ function PanelPage() {
         posicion: posicion >= 0 ? posicion + 1 : null,
       };
     },
+    // Mientras haya pedidos en curso, refrescamos para reflejar el webhook de pago
+    // y el avance del worker sin recargar la página.
+    refetchInterval: (query) => {
+      const d = query.state.data as { videos?: { estado_generacion: string }[] } | undefined;
+      const enCurso = (d?.videos ?? []).some(
+        (v) => v.estado_generacion === "pendiente_pago" || v.estado_generacion === "procesando",
+      );
+      return enCurso ? 5000 : false;
+    },
   });
 
   async function salir() {
