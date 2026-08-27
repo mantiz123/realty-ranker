@@ -23,7 +23,22 @@ async function authorize(request: Request): Promise<Response | null> {
   return null
 }
 
-
+// Photos are stored as domain-agnostic paths. Resolve them against the origin
+// the worker actually reached (the deployed app), never the editor preview host.
+function resolvePhotoUrls(urls: unknown, requestUrl: string): string[] {
+  const origin = new URL(requestUrl).origin
+  const list = Array.isArray(urls) ? urls : []
+  return list
+    .filter((u): u is string => typeof u === 'string' && u.length > 0)
+    .map((u) => {
+      const path = u.startsWith('http')
+        ? new URL(u).pathname
+        : u.startsWith('/')
+          ? u
+          : `/${u}`
+      return `${origin}${path}`
+    })
+}
 
 export const Route = createFileRoute('/api/public/video-jobs')({
   server: {
