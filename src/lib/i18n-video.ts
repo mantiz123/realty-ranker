@@ -77,6 +77,7 @@ export const esVideo: Record<string, string> = {
   "wiz.back": "Volver",
 
   "panel.video.processing": "Procesando",
+  "panel.video.pendingPayment": "Pendiente de pago",
   "panel.video.ready": "Listo",
   "panel.video.download": "Descargar",
   "panel.video.upsellTitle": "Destaca esta propiedad en el ranking de {estado}",
@@ -173,6 +174,7 @@ export const enVideo: Record<string, string> = {
   "wiz.back": "Back",
 
   "panel.video.processing": "Processing",
+  "panel.video.pendingPayment": "Payment pending",
   "panel.video.ready": "Ready",
   "panel.video.download": "Download",
   "panel.video.upsellTitle": "Feature this listing in the {estado} ranking",
