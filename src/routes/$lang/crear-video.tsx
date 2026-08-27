@@ -365,14 +365,16 @@ function CrearVideoPage() {
             <div className="mt-10 flex flex-wrap items-center gap-6 border-t border-border pt-8">
               <Button
                 className="rounded-none px-10"
-                disabled={animadas.length === 0}
-                onClick={() => setPaso("generando")}
+                disabled={animadas.length === 0 || enviando}
+                onClick={() => void enviarTrabajo()}
               >
                 {t("wiz.anim.continue")}
               </Button>
               {animadas.length === 0 && (
                 <p className="text-sm text-muted-foreground">{t("wiz.anim.needOne")}</p>
               )}
+              {error && <p className="text-sm text-destructive">{error}</p>}
+
               <Button
                 variant="ghost"
                 className="ml-auto rounded-none px-0 text-xs uppercase tracking-[0.18em] hover:bg-transparent"
