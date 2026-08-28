@@ -174,9 +174,12 @@ export const enVideo: Record<string, string> = {
   "wiz.sum.mood": "Music",
   "wiz.sum.formats": "Formats",
   "wiz.sum.extra": "YouTube extra (horizontal)",
-  "wiz.sum.total": "Total",
+"wiz.sum.total": "Total",
   "wiz.sum.pay": "Pay and generate my video",
   "wiz.sum.note": "Secure payment with Stripe. Your video starts generating once payment is confirmed.",
+  "wiz.sum.watermark.title": "Your watermark preview",
+  "wiz.sum.watermark.desc":
+    "Your video will include this discreet watermark — you can remove it later for $15 if you change your mind.",
   "wiz.back": "Back",
 
   "panel.video.processing": "Processing",
