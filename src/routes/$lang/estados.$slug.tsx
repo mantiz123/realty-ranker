@@ -116,33 +116,47 @@ function EstadoPage() {
   const { data: videos } = useQuery({
     queryKey: ["valla", estado.code],
     queryFn: async () => {
+      const hoy = new Date().toISOString().slice(0, 10);
       const { data: slots, error } = await supabase
         .from("billboard_slots")
-        .select("id, video_id, realtor_id, clics")
+        .select("id, video_id, realtor_id, clics, fecha_inicio, fecha_fin")
         .eq("estado", estado.code);
       if (error) throw error;
-      const videoIds = (slots ?? []).map((s) => s.video_id).filter(Boolean) as string[];
-      if (videoIds.length === 0) return [];
+
+      const vigentes = (slots ?? []).filter(
+        (s) => s.video_id && s.fecha_inicio <= hoy && (!s.fecha_fin || s.fecha_fin >= hoy),
+      );
+      if (vigentes.length === 0) return [];
+
       const [{ data: vids }, { data: realtors }] = await Promise.all([
-        supabase.from("videos").select("id, video_url").in("id", videoIds),
+        supabase
+          .from("videos")
+          .select("id, video_url, estado_generacion")
+          .in("id", vigentes.map((s) => s.video_id) as string[])
+          .eq("estado_generacion", "listo"),
         supabase
           .from("realtors")
           .select("id, nombre, inmobiliaria")
           .in(
             "id",
-            (slots ?? []).map((s) => s.realtor_id),
+            vigentes.map((s) => s.realtor_id),
           ),
       ]);
-      return (slots ?? []).map((s) => ({
-        slotId: s.id,
-        url: (vids ?? []).find((v) => v.id === s.video_id)?.video_url ?? null,
-        inmobiliaria:
-          (realtors ?? []).find((r) => r.id === s.realtor_id)?.inmobiliaria ??
-          (realtors ?? []).find((r) => r.id === s.realtor_id)?.nombre ??
-          "Brokerage",
-      }));
+
+      return vigentes
+        .map((s) => {
+          const v = (vids ?? []).find((x) => x.id === s.video_id);
+          const r = (realtors ?? []).find((x) => x.id === s.realtor_id);
+          return {
+            slotId: s.id,
+            url: v?.video_url ?? null,
+            inmobiliaria: r?.inmobiliaria ?? r?.nombre ?? "Brokerage",
+          };
+        })
+        .filter((s) => !!s.url);
     },
   });
+
 
   const registrarVista = async (tipo: "ranking_click" | "billboard_view", realtorId?: string) => {
     await supabase
