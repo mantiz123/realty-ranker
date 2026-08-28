@@ -71,9 +71,12 @@ export const esVideo: Record<string, string> = {
   "wiz.sum.mood": "Música",
   "wiz.sum.formats": "Formatos",
   "wiz.sum.extra": "Extra YouTube (horizontal)",
-  "wiz.sum.total": "Total",
+"wiz.sum.total": "Total",
   "wiz.sum.pay": "Pagar y generar mi video",
   "wiz.sum.note": "Pago seguro con Stripe. Tu video empieza a generarse al confirmarse el pago.",
+  "wiz.sum.watermark.title": "Vista previa de tu marca de agua",
+  "wiz.sum.watermark.desc":
+    "Tu video incluirá esta marca de agua discreta — puedes quitarla después por $15 si cambias de opinión.",
   "wiz.back": "Volver",
 
   "panel.video.processing": "Procesando",
