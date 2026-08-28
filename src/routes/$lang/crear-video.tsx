@@ -546,7 +546,42 @@ function CrearVideoPage() {
                 </dt>
                 <dd className="font-display text-4xl">${total}</dd>
               </div>
-            </dl>
+</dl>
+
+            {!sinMarcaAgua && (
+              <div className="mt-10 max-w-md">
+                <h3 className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+                  {t("wiz.sum.watermark.title")}
+                </h3>
+                <div className="mt-4 overflow-hidden rounded-sm border border-border bg-black shadow-sm">
+                  <div className="relative aspect-video w-full overflow-hidden">
+                    <img
+                      src={cinematicImg}
+                      alt=""
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
+                    {/* Marca de agua discreta: logo + QR en la esquina inferior derecha */}
+                    <div className="absolute bottom-3 right-3 flex items-center gap-2 bg-black/55 px-2.5 py-1.5 backdrop-blur-[2px]">
+                      <span className="font-display text-sm italic tracking-tight text-white">
+                        RealtorBoard
+                      </span>
+                      <svg width="22" height="22" viewBox="0 0 24 24" className="text-white" aria-hidden="true">
+                        <rect x="2" y="2" width="9" height="9" fill="none" stroke="currentColor" strokeWidth="2" />
+                        <rect x="13" y="2" width="9" height="9" fill="currentColor" />
+                        <rect x="2" y="13" width="9" height="9" fill="currentColor" />
+                        <rect x="13" y="13" width="4" height="4" fill="currentColor" />
+                        <rect x="18" y="18" width="4" height="4" fill="currentColor" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  {t("wiz.sum.watermark.desc")}
+                </p>
+              </div>
+            )}
+
             <div className="mt-10 flex flex-wrap items-center gap-6">
               <Button className="rounded-none px-10" onClick={pagar} disabled={pagando}>
                 {pagando && <Loader2 className="mr-2 size-4 animate-spin" />}
