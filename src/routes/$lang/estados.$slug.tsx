@@ -119,7 +119,7 @@ function EstadoPage() {
       const hoy = new Date().toISOString().slice(0, 10);
       const { data: slots, error } = await supabase
         .from("billboard_slots")
-        .select("id, video_id, realtor_id, clics, estado_slot:estado, fecha_inicio, fecha_fin")
+        .select("id, video_id, realtor_id, clics, fecha_inicio, fecha_fin")
         .eq("estado", estado.code);
       if (error) throw error;
 
